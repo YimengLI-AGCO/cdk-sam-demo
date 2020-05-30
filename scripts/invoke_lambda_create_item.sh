@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sam local invoke CreateItem0F65601B --docker-network sam-demo --profile yimengli-dev
+sam local invoke createItem -e ./lambda_function/helloworld.json --docker-network sam-demo | jq
 
-echo "[Result]Table items:"
-aws dynamodb scan --table-name SamTest --endpoint-url http://localhost:8000
+echo -e "[Result]Table items:"
+aws dynamodb scan --table-name thor_fleet_logistics_statuses --endpoint-url http://localhost:8000
