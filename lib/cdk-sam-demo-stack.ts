@@ -30,7 +30,19 @@ export class CdkSamDemoStack extends cdk.Stack {
         'TABLE_NAME': statusTable
       }
     });
-    table.grantFullAccess(createItem);
+
+    const getItems = new lambda.Function(this, 'getItems', {
+      functionName: 'getItems',
+      runtime: lambda.Runtime.PYTHON_3_7,
+      handler: 'get_items.handler',
+      code: lambda.Code.fromAsset('lambda_function'),
+      environment: {
+        'TABLE_NAME': statusTable
+      }
+    });
+
+    table.grantWriteData(createItem);
+    table.grantReadData(getItems);
 
     const api = new apigateway.RestApi(this, 'sam-test-api', {
       restApiName: 'samTestAPI'
