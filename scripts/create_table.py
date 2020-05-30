@@ -1,3 +1,6 @@
+"""
+Script to create DynamoDB table: thor_fleet_logistics_statuses
+"""
 import boto3
 import logging
 from botocore.exceptions import ClientError
@@ -5,7 +8,7 @@ import traceback
 
 logger = logging.getLogger()
 dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000/')
-table_name = 'SamTest'
+table_name = 'thor_fleet_logistics_statuses'
 
 try:
     table = dynamodb.create_table(
