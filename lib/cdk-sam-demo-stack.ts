@@ -2,7 +2,6 @@ import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as apigateway from '@aws-cdk/aws-apigateway';
-import s3 = require('@aws-cdk/aws-s3');
 
 
 export class CdkSamDemoStack extends cdk.Stack {
@@ -14,8 +13,8 @@ export class CdkSamDemoStack extends cdk.Stack {
       tableName: 'SamTest'
     });
 
-    const hello = new lambda.Function(this, 'MyFunction', {
-      functionName: 'hello-world',
+    const hello = new lambda.Function(this, 'helloWorld', {
+      functionName: 'helloWorld',
       runtime: lambda.Runtime.PYTHON_3_7,
       handler: 'index.lambda_handler',
       code: lambda.Code.fromAsset('lambda_function')
@@ -29,13 +28,13 @@ export class CdkSamDemoStack extends cdk.Stack {
     });
     table.grantFullAccess(createItem);
 
-    // const api = new apigateway.RestApi(this, 'sam-test-api', {
-    //   restApiName: 'Sam Test'
-    // });
+    const api = new apigateway.RestApi(this, 'sam-test-api', {
+      restApiName: 'samTestAPI'
+    });
 
-    // const sam = api.root.addResource('sam');
-    // const samIntegration = new apigateway.LambdaIntegration(hello);
-    // sam.addMethod('GET', samIntegration);
+    const helloIntegration = new apigateway.LambdaIntegration(hello);
+    const pingEndpoint = api.root.addResource('ping');
+    pingEndpoint.addMethod('GET', helloIntegration);
 
     // table.grantFullAccess(health);
   }
