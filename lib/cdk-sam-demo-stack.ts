@@ -8,9 +8,10 @@ export class CdkSamDemoStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const table = new dynamodb.Table(this, 'SamTest', {
+    const statusTable = 'thor_fleet_logistics_statuses';
+    const table = new dynamodb.Table(this, statusTable, {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-      tableName: 'SamTest'
+      tableName: statusTable
     });
 
     const hello = new lambda.Function(this, 'helloWorld', {
@@ -20,11 +21,14 @@ export class CdkSamDemoStack extends cdk.Stack {
       code: lambda.Code.fromAsset('lambda_function')
     });
 
-    const createItem = new lambda.Function(this, 'CreateItem', {
-      functionName: 'yimeng-fun-1',
+    const createItem = new lambda.Function(this, 'createItem', {
+      functionName: 'createItem',
       runtime: lambda.Runtime.PYTHON_3_7,
-      handler: 'sam_test.create_handler',
-      code: lambda.Code.asset('lambda_function')
+      handler: 'create_item.handler',
+      code: lambda.Code.fromAsset('lambda_function'),
+      environment: {
+        'TABLE_NAME': statusTable
+      }
     });
     table.grantFullAccess(createItem);
 
@@ -33,9 +37,11 @@ export class CdkSamDemoStack extends cdk.Stack {
     });
 
     const helloIntegration = new apigateway.LambdaIntegration(hello);
+    const createIntegration = new apigateway.LambdaIntegration(createItem);
     const pingEndpoint = api.root.addResource('ping');
     pingEndpoint.addMethod('GET', helloIntegration);
 
-    // table.grantFullAccess(health);
+    const statusEndpoint = api.root.addResource('status');
+    statusEndpoint.addMethod('POST', createIntegration);
   }
 }
