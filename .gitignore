@@ -14,3 +14,4 @@ template.yaml
 package-lock.json
 
 .idea/
+Pipfile.lock
