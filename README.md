@@ -1,14 +1,21 @@
-# Welcome to your CDK TypeScript project!
+# AWS CDK(Cloud Development Kit) & AWS SAM(Serverless Application Model) demo project
 
-This is a blank project for TypeScript development with CDK.
+#### Step 1. Start the local aws dynamodb docker container
+```shell script
+$ ./scripts/start_docker.sh
+```
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+#### Step 2. Generate the CloudFormation Template, Create the table locally
+```shell script
+$ ./scripts/setup.sh
+```
 
-## Useful commands
+#### Step 3. Start the local API Gateway
+```shell script
+$ ./scripts/start_api.sh
+```
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+#### Check the local dynamodb table:
+```shell script
+$ aws dynamodb scan --table-name thor_fleet_logistics_statuses --endpoint-url http://localhost:8000
+```
