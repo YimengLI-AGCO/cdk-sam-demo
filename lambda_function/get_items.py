@@ -1,6 +1,7 @@
 import os
 import boto3
 import traceback
+import json
 
 TABLE_NAME = os.environ.get('TABLE_NAME')
 
@@ -12,10 +13,7 @@ def handler(event, context):
     table = dynamodb.Table(TABLE_NAME)
     try:
         response = table.scan()
-        print(response)
-        return {'statusCode': 200, 'body': response.get('Items')}
+        return {'statusCode': 200, 'body': json.dumps(response.get('Items'))}
     except Exception as e:
         traceback.print_exc()
         return {'statusCode': 500, 'body': 'Failed to retrieve items'}
-
-

@@ -50,10 +50,12 @@ export class CdkSamDemoStack extends cdk.Stack {
 
     const helloIntegration = new apigateway.LambdaIntegration(hello);
     const createIntegration = new apigateway.LambdaIntegration(createItem);
+    const getAllIntegration = new apigateway.LambdaIntegration(getItems);
     const pingEndpoint = api.root.addResource('ping');
     pingEndpoint.addMethod('GET', helloIntegration);
 
     const statusEndpoint = api.root.addResource('status');
     statusEndpoint.addMethod('POST', createIntegration);
+    statusEndpoint.addMethod('GET', getAllIntegration);
   }
 }
